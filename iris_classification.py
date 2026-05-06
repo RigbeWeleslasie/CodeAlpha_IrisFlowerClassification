@@ -1,8 +1,4 @@
 
-# =============================================================
-# IRIS FLOWER CLASSIFICATION — CodeAlpha Data Science Internship
-# =============================================================
-
 import pandas as pd
 import numpy as np
 import matplotlib
@@ -21,15 +17,15 @@ from sklearn.svm import SVC
 import warnings
 warnings.filterwarnings("ignore")
 
-# ── 1. LOAD ───────────────────────────────────────────────────
-print("\n📂 STEP 1: Loading Dataset...")
+# Load
+print("\n STEP 1: Loading Dataset...")
 df = pd.read_csv("Iris.csv")
 print(df.head())
 
-# ── 2. CLEAN ──────────────────────────────────────────────────
-print("\n🧹 STEP 2: Cleaning Dataset...")
+# Clean
+print("\n STEP 2: Cleaning Dataset...")
 
-# Drop Id — not a feature
+# Drop Id - not a feature
 df.drop(columns=["Id"], inplace=True)
 
 # Check for duplicates
@@ -46,13 +42,13 @@ print(f"\n   Data types:\n{df.dtypes}")
 print(f"   Clean dataset shape: {df.shape}")
 print(f"   Class distribution:\n{df['Species'].value_counts()}")
 
-# ── 3. EXPLORE (EDA) ──────────────────────────────────────────
-print("\n📊 STEP 3: Exploratory Data Analysis...")
+# Explore(EDA)
+print("\n STEP 3: Exploratory Data Analysis...")
 print(df.describe())
 
 # Plot 1: Distribution of each feature
 fig, axes = plt.subplots(2, 2, figsize=(12, 8))
-features = df.columns[:-1]  # all columns except Species
+features = df.columns[:-1]  
 for ax, feat in zip(axes.flatten(), features):
     for species, group in df.groupby("Species"):
         ax.hist(group[feat], alpha=0.6, label=species, bins=15)
@@ -66,7 +62,7 @@ plt.savefig("iris_distributions.png", dpi=150)
 plt.close()
 print("   Saved: iris_distributions.png")
 
-# Plot 2: Boxplots — spot outliers
+# Plot 2: Boxplots - spot outliers
 fig, axes = plt.subplots(2, 2, figsize=(12, 8))
 for ax, feat in zip(axes.flatten(), features):
     sns.boxplot(data=df, x="Species", y=feat, palette="Set2", ax=ax)
@@ -94,26 +90,26 @@ plt.savefig("iris_pairplot.png", bbox_inches="tight", dpi=150)
 plt.close()
 print("   Saved: iris_pairplot.png")
 
-# ── 4. PREPROCESS ─────────────────────────────────────────────
-print("\n⚙️  STEP 4: Preprocessing...")
+# PreProcess
+print("\n STEP 4: Preprocessing...")
 
-X = df.drop(columns=["Species"])   # features
-y = df["Species"]                  # target label
+X = df.drop(columns=["Species"])  
+y = df["Species"]                  
 
 # Encode species names to numbers
 le = LabelEncoder()
 y_encoded = le.fit_transform(y)
 print(f"   Label encoding: {dict(zip(le.classes_, le.transform(le.classes_)))}")
 
-# Split: 80% train, 20% test — stratified to keep class balance
+# Split: 80% train, 20% test - stratified to keep class balance
 X_train, X_test, y_train, y_test = train_test_split(
     X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded
 )
 print(f"   Train samples: {X_train.shape[0]}")
 print(f"   Test  samples: {X_test.shape[0]}")
 
-# ── 5. TRAIN & EVALUATE ───────────────────────────────────────
-print("\n🤖 STEP 5: Training Models...")
+# Train & Evaluate
+print("\n STEP 5: Training Models...")
 
 models = {
     "K-Nearest Neighbors"    : KNeighborsClassifier(n_neighbors=5),
@@ -124,9 +120,9 @@ models = {
 
 results = {}
 for name, model in models.items():
-    model.fit(X_train, y_train)          # train
-    y_pred = model.predict(X_test)       # predict
-    acc = accuracy_score(y_test, y_pred) # evaluate
+    model.fit(X_train, y_train)          
+    y_pred = model.predict(X_test)       
+    acc = accuracy_score(y_test, y_pred) 
     results[name] = {"y_pred": y_pred, "accuracy": acc}
     print(f"\n   {name}")
     print(f"   Accuracy: {acc * 100:.2f}%")
@@ -134,8 +130,8 @@ for name, model in models.items():
     for line in report.split("\n"):
         print("   " + line)
 
-# ── 6. COMPARE MODELS ─────────────────────────────────────────
-print("\n📊 STEP 6: Comparing Models...")
+# Compare models
+print("\n STEP 6: Comparing Models...")
 
 names      = list(results.keys())
 accuracies = [results[n]["accuracy"] * 100 for n in names]
@@ -157,7 +153,7 @@ plt.savefig("iris_model_comparison.png", dpi=150)
 plt.close()
 print("   Saved: iris_model_comparison.png")
 
-# ── 7. CONFUSION MATRICES ─────────────────────────────────────
+# Confusion Matrics
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 for ax, (name, res) in zip(axes.flatten(), results.items()):
     cm   = confusion_matrix(y_test, res["y_pred"])
@@ -171,7 +167,7 @@ plt.savefig("iris_confusion_matrices.png", dpi=150)
 plt.close()
 print("   Saved: iris_confusion_matrices.png")
 
-# ── 8. FINAL SUMMARY ──────────────────────────────────────────
+# Final Summary
 best_name = max(results, key=lambda n: results[n]["accuracy"])
 best_acc  = results[best_name]["accuracy"]
 
@@ -180,7 +176,7 @@ print("  FINAL SUMMARY")
 print("=" * 55)
 for name in names:
     acc  = results[name]["accuracy"]
-    star = " ⭐ BEST" if name == best_name else ""
+    star = "  BEST" if name == best_name else ""
     print(f"  {name:<30} {acc*100:.2f}%{star}")
-print(f"\n🏆 Best Model : {best_name} — {best_acc*100:.2f}%")
-print("\n✅ Project complete!")
+print(f"\n Best Model : {best_name} — {best_acc*100:.2f}%")
+print("\n Project complete!")
