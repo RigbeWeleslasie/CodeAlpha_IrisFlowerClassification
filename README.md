@@ -1,6 +1,6 @@
 
 # Iris Flower Classification
-### CodeAlpha Data Science Internship — Task 1
+### CodeAlpha Data Science Internship - Task 1
 
 ## Project Overview
 This project builds and evaluates machine learning models to classify
